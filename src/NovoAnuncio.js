@@ -18,9 +18,14 @@ class NovoAnuncio extends Component{
         const {name, size} = file;
         //Cria a referencia para enviar para o storage
         const ref = storage.ref(name);
-        
+
         //Envia para o storage
         ref.put(file).then(img => {
+            //console.log("IMG", img);
+        })
+        
+        ref.getDownloadURL().then(img => {
+            console.log("IMG", img)
             /* Caso a foto seja enviada com sucesso para o
             storage prossegue com o cadastro do anuncio */
             const novoAnuncio = {
@@ -28,11 +33,10 @@ class NovoAnuncio extends Component{
                 descricao: this.descricao.value,
                 preco: this.preco.value,
                 vendedor: this.vendedor.value,
-                foto: "http://placehold.it/200x140",
+                foto: img,
                 telefone: this.telefone.value,
                 categoria: this.categoria.value
             }
-            //foto: img.metadata.downloadURLs[0],
 
             //Salva o anuncio
             base.push('anuncios', {
@@ -64,7 +68,7 @@ class NovoAnuncio extends Component{
                         <div className='form-group'>
                             <label htmlFor='categoria'>Categorias</label>
                             <select ref={(ref)=>this.categoria=ref} >
-                                {this.props.categorias.map(cat=> <option value={cat.url}>{cat.categoria}</option>)}
+                                {this.props.categorias.map(cat=> <option key={cat.url} value={cat.url}>{cat.categoria}</option>)}
                             </select>
                         </div>
                         <div className='form-group'>
